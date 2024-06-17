@@ -8,7 +8,10 @@ This is an expansion on homework 2 of the capstone class for ECON 1700: Big Data
 Project deliverables:
 - Move and organize code from Spyder to VSCode
 - Create and use virtual Python environment for project
+  - https://code.visualstudio.com/docs/python/environments
+  - https://realpython.com/python-virtual-environments-a-primer/#why-do-you-need-virtual-environments
 - Learn and use pandas for data exploration
+  - https://optimumsportsperformance.com/blog/from-tidyverse-to-python/
 - Learn and use maplotlib and seaborn for data visualization
 - Learn and use scikit-learn (or other library) for ML model development
   - Develop and test at least 5 models (including baseline logistic regression)
