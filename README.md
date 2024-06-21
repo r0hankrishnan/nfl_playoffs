@@ -16,5 +16,5 @@ Project deliverables:
 - Learn and use scikit-learn (or other library) for ML model development
   - Develop and test at least 5 models (including baseline logistic regression)
 - Recreate (& improve upon) excel data using web scraping
-- Create Python web app that displays a summary of a team's performance and the output of the best predictive model
+- Create Python web app that displays a summary of a team's performance and the output of the best predictive model (steamlit, fastapi)
 - *Extra*: Recreate implementation in R and R Shiny
