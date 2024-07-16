@@ -3,7 +3,7 @@
 
 *Apologies for the incomplete README, I am in the process of updating and expanding upon my submitted work for this project!*
 
-This is an expansion on homework 2 of the capstone class for ECON 1700: Big Data Economics. Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python. This project was originally done in Spyder but is being recreated and expanded upon using VSCode for learning purposes.
+Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python. This project was originally done in Spyder but is being recreated and expanded upon using VSCode for learning purposes.
 
 Project deliverables:
 - Move and organize code from Spyder to VSCode
