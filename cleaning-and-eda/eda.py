@@ -112,4 +112,10 @@ corr_mat = df.drop("Team", axis  = 1).corr()
 plt.figure(figsize =(25, 20))
 sns.heatmap(corr_mat, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
 
+#Pulled from Marimo -- edit to fit here
+# correlations = df2.corr()
+# correlations = correlations.loc[:, "Playoff"]
+# correlations = correlations.reset_index().rename(columns = {"index":"variable"})
+# correlations = correlations[(correlations["Playoff"] >0.50) | (correlations["Playoff"] < -0.50)]
+# correlations.sort_values(by = "Playoff")
 
