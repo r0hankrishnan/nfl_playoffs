@@ -5,16 +5,21 @@
 
 Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python. This project was originally done in Spyder but is being recreated and expanded upon using VSCode for learning purposes.
 
-Project deliverables:
-- Move and organize code from Spyder to VSCode
-- Create and use virtual Python environment for project
-  - https://code.visualstudio.com/docs/python/environments
-  - https://realpython.com/python-virtual-environments-a-primer/#why-do-you-need-virtual-environments
-- Learn and use pandas for data exploration
-  - https://optimumsportsperformance.com/blog/from-tidyverse-to-python/
-- Learn and use maplotlib and seaborn for data visualization
-- Learn and use scikit-learn (or other library) for ML model development
-  - Develop and test at least 5 models (including baseline logistic regression)
-- Recreate (& improve upon) excel data using web scraping
-- Create Python web app that displays a summary of a team's performance and the output of the best predictive model (steamlit, fastapi)
-- *Extra*: Recreate implementation in R and R Shiny
+## Table of Contents
+1. [Introduction](#Introduction)
+2. [Data](#Data)
+3. [Exploratory Analysis](#Exploratory-Analysis)
+4. [Modeling](#Modeling)
+5. [Dashboarding](#Dashboarding)
+
+## Introduction
+
+## Data
+
+## Exploratory Analysis
+
+## Modeling
+
+## Dashboarding
+
+
