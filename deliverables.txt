@@ -1,1 +1,14 @@
+Project goals/deliverables:
 
+- Move and organize code from Spyder to VSCode
+- Create and use virtual Python environment for project
+  - https://code.visualstudio.com/docs/python/environments
+  - https://realpython.com/python-virtual-environments-a-primer/#why-do-you-need-virtual-environments
+- Learn and use pandas for data exploration
+  - https://optimumsportsperformance.com/blog/from-tidyverse-to-python/
+- Learn and use maplotlib and seaborn for data visualization
+- Learn and use scikit-learn (or other library) for ML model development
+- Develop and test at least 5 models (including baseline logistic regression)
+- Recreate (& improve upon) excel data using web scraping
+- Create Python web app that displays a summary of a team's performance and the output of the best predictive model (steamlit, fastapi)
+- Extra: Recreate implementation in R and R Shiny
