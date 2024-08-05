@@ -4,8 +4,7 @@
 import pandas as pd
 
 #Load data
-path = "../../nfl-playoff-predictor/data/nfl_data.xlsx"
-df = pd.read_excel(path)
+df = loadData()
 
 #Look at first columns
 df.head()
