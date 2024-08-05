@@ -17,15 +17,15 @@ dfNoTeam = df.drop("Team", axis = 1).copy()
 
 
 #Check for NA values
-numNA = 0
+noNumNA = 0
 for col in df.columns:
     if df[col].isna().sum() == 0:
-        numNA += 1
+        noNumNA += 1
         pass
     else:
         print(f"{col} has {df[col].isna().sum()} NA values.")
 
-print(f"There are {numNA} columns with NA values")
+print(f"There are {noNumNA} columns with no NA values")
 
 #List unique values -- look for potential discrete variables
 for col in df.columns:
@@ -92,6 +92,12 @@ for col in condStandMeans:
     
 condStandDiffs.sort_values(by= "diff")
 
+#Look at table of correlations
+correlations = dfNoTeam.corr()
+correlations = correlations.loc[:, "Playoff"]
+correlations = correlations.reset_index().rename(columns = {"index": "variable"})
+correlations = correlations[(correlations["Playoff"] > 0.50) | (correlations["Playoff"] < -0.50)]
+correlations.sort_values(by = "Playoff")
 #-------------------------------#
 
 #Load visualization packages
@@ -112,7 +118,7 @@ corr_mat = df.drop("Team", axis  = 1).corr()
 plt.figure(figsize =(25, 20))
 sns.heatmap(corr_mat, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
 
-#Pulled from Marimo -- edit to fit here
+# Pulled from Marimo -- edit to fit here
 # correlations = df2.corr()
 # correlations = correlations.loc[:, "Playoff"]
 # correlations = correlations.reset_index().rename(columns = {"index":"variable"})
