@@ -1,9 +1,13 @@
+#Article
+#https://towardsdatascience.com/building-a-logistic-regression-in-python-step-by-step-becd4d56c9c8
+
+
+
 # Import basic modules
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import scipy
 
 #Load data
 path = "../../nfl/data/modelling.csv"
@@ -48,6 +52,7 @@ import statsmodels.api as sm
 logit = sm.Logit(yTrain, xTrain)
 results = logit.fit()
 
+'''
 pred_probit = results_probit.predict(X_test)
 pred_probit = pd.DataFrame(data = pred_probit, columns=["y_pred"])
 probit_df= pred_probit.copy()
@@ -62,3 +67,4 @@ pred_probit_thres = np.where(pred_probit > 0.5, 1, 0)
 
 probit_confusion_matrix = confusion_matrix(y_test, pred_probit_thres)
 #Accuracy is 0.6667 -- a little better than NB
+'''
