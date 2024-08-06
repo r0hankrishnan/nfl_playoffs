@@ -18,7 +18,7 @@ df.describe()
 #Only want per game stats
 #Drop Team, total stats, and Year since those can't be used as predictors
 drop = list(["Team","off_gp","off_total_yds","off_pass_yds","off_rush_yds","off_pts","def_total_yds"
-             ,"def_pass_yds","def_rush_yds","def_pts","Year"])
+             ,"def_pass_yds","def_rush_yds","def_pts"])
 dfModel = df.drop(drop, axis = 1)
 
 dfModel.head()
