@@ -103,23 +103,3 @@ plt.title('Receiver operating characteristic')
 plt.legend(loc="lower right")
 plt.savefig('Log_ROC')
 plt.show()
-
-
-
-
-'''
-pred_probit = results_probit.predict(X_test)
-pred_probit = pd.DataFrame(data = pred_probit, columns=["y_pred"])
-probit_df= pred_probit.copy()
-probit_df["y_test"] = y_test
-
-print(probit_df['y_test'].describe())
-print(probit_df["y_pred"].describe())
-
-pred_probit = np.array(pred_probit)
-
-pred_probit_thres = np.where(pred_probit > 0.5, 1, 0)
-
-probit_confusion_matrix = confusion_matrix(y_test, pred_probit_thres)
-#Accuracy is 0.6667 -- a little better than NB
-'''
