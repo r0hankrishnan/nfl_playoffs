@@ -105,3 +105,10 @@ print(f"Randomized search rf test accuracy: {randomForest.score(xTest, yTest)}."
 #Looks like it is overfitting by a lot though, 0.99 training accuracy 
 print(f"Randomized search rf train accuracy: {randomForest.score(xTrain, yTrain)}.")
 
+'''
+I could continue with a grid search to further optimize, 
+but it appears that the data is stable enough that a simple DT can work 
+if pruned. A DT also allows for quick predicition and inference so
+I will stick with that for now. 
+'''
+
