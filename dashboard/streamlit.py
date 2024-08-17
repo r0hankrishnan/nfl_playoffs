@@ -9,6 +9,7 @@ import os
 #Set paths for data
 path = "./data/modelling.csv"
 path2 = "./data/nfl_data.xlsx"
+
 #--------------#
 
 #Title
@@ -48,34 +49,29 @@ yearList = np.insert(yearList, 0, "All")
 with st.sidebar:
     st.header("🔎 Filters:")
     hideData = st.checkbox("Hide Data Table")
-    teamFilter = st.selectbox(label = "Pick a Team", options = teamList)
+    hideBar = st.checkbox("Hide Massey Ratings Viz")
+    hideScatter = st.checkbox("Hide ESPN Stats Viz")
     yearFilter = st.selectbox(label = "Pick a Year", options = yearList)
     playoffFilter = st.selectbox(label = "Playoffs (Yes/No)", options = ["All", "Yes", "No"])
-    
+
+#---------------#
+
+#Stats Table
+
 #Function to filter data based on sidebar values
 def filterData():
-    #If both team and year are "All"
-    if teamFilter == "All" and yearFilter == "All":
+          
+    #If only year is "All"  
+    if yearFilter == "All":
         if playoffFilter == "Yes":
             filteredData = displayData[(displayData["Playoff"] == 1)]
         elif playoffFilter == "All":
             filteredData = displayData
         else:
-            filteredData = displayData[(displayData["Playoff"]== 0)]
-            
-    #If only year is "All"  
-    elif teamFilter != "All" and yearFilter == "All":
-        if playoffFilter == "Yes":
-            filteredData = displayData[(displayData["Team"] == teamFilter) &
-                                       (displayData["Playoff"] == 1)]
-        elif playoffFilter == "All":
-            filteredData = displayData[(displayData["Team"] == teamFilter)]
-        else:
-            filteredData = displayData[(displayData["Team"] == teamFilter) &
-                                       (displayData["Playoff"] == 0)]
+            filteredData = displayData[(displayData["Playoff"] == 0)]
 
     #If only team is "All"        
-    elif teamFilter == "All" and yearFilter != "All":
+    else:
         if playoffFilter == "Yes":
             filteredData = displayData[(displayData["Year"] == yearFilter) &
                                        (displayData["Playoff"] == 1)]
@@ -85,44 +81,30 @@ def filterData():
             filteredData = displayData[(displayData["Year"] == yearFilter) &
                                        (displayData["Playoff"] == 0)]
     
-    #If specific team and year are selected   
-    else: 
-        if playoffFilter == "Yes":
-            filteredData = displayData[(displayData["Team"] == teamFilter) &
-                                        (displayData["Year"] == yearFilter) &
-                                        (displayData["Playoff"] == 1)]
-        elif playoffFilter == "All":
-            filteredData = displayData[(displayData["Team"] == teamFilter)&
-                                       (displayData["Year"] == yearFilter)]
-        else:
-            filteredData = displayData[(displayData["Team"] == teamFilter) &
-                                        (displayData["Year"] == yearFilter) &
-                                        (displayData["Playoff"] == 0)]
-    
     return filteredData
 
 #Load filtered data
 filteredTable = filterData()
 
-#--------------#
-
 #Display stats table
-st.subheader(f"🧾 Stats (Team: {teamFilter} | Year: {yearFilter} | Playoff: {playoffFilter})")
+st.subheader(f"🧾 Stats (Year: {yearFilter} | Playoff: {playoffFilter})")
 if not hideData:
     st.write(filteredTable)
 
 #---------------#
+
 #Massey Ratings
 st.divider()
 st.subheader(f"📊 Massey Ratings (Year: {yearFilter} | Playoff: {playoffFilter})")
 
-@st.cache_data
+#Function to create grouped data
 def generateGraphData():
     newData = data.drop(["Team"], axis = 1).groupby(["Playoff", "Year"]).mean(numeric_only=True)
     return newData
 
 graphData = generateGraphData()
 
+#Turn data into normal df, melt by playoff and year, change 1/0 to yes/no
 graphData = pd.DataFrame(graphData.to_records()).reset_index()
 masseyMelted = pd.melt(graphData, id_vars= ["Playoff", "Year"], 
                                  value_vars=["rat", "pwr", "def", "hfa", "sos"])
@@ -130,6 +112,7 @@ masseyMelted["Playoff"] = masseyMelted["Playoff"].astype(str)
 masseyMelted["Playoff"] = pd.Series(np.where(masseyMelted["Playoff"].values == '1', "Yes", "No"),
           masseyMelted.index)
 
+#Create filtering logic 
 def filterGraphData():
     if yearFilter == "All" and playoffFilter == "All":
         filteredDf = masseyMelted
@@ -153,9 +136,10 @@ def filterGraphData():
     
     return filteredDf
             
-  
+#Generate filtered data
 masseyFiltered = filterGraphData()
 
+#Create side-by-side bar plot and display
 fig = px.bar(masseyFiltered, x="value", y="variable", color="Playoff", barmode="group",
              labels={
                  "value":"Value",
@@ -163,12 +147,17 @@ fig = px.bar(masseyFiltered, x="value", y="variable", color="Playoff", barmode="
              }
              )
 fig.update_layout(legend_traceorder="reversed")
-st.plotly_chart(fig)
+
+if not hideBar:
+    st.plotly_chart(fig)
 
 #----------#
+
+#Scatter Matrix
 st.divider()
 st.subheader(f"📈 ESPN Per-Game Stats (Year: {yearFilter} | Playoff: {playoffFilter})")
 
+#Create scatter matrix data
 scatterData = data.drop(["Team", "rat", "pwr", "def", "hfa", "sos"], axis = 1)
 scatterData["Playoff"] = scatterData["Playoff"].astype(str)
 scatterData["Playoff"] = pd.Series(np.where(scatterData["Playoff"].values == '1', "Yes", "No"),
@@ -177,6 +166,7 @@ scatterData = scatterData[["Year", "Playoff", "off_total_yds_g", "off_pass_yds_g
                 "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
                 "def_pts_g"]]
 
+#Create filtering logic
 def filterScatterData():
     if yearFilter == "All" and playoffFilter == "All":
         filteredDf = scatterData
@@ -200,8 +190,10 @@ def filterScatterData():
     
     return filteredDf
 
+#Load filtered data
 scatterFilter = filterScatterData()
 
+#Generate scatter plot, adjust labels & sizes, display
 fig2 = px.scatter_matrix(scatterFilter,
     dimensions=["off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g", 
                 "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
@@ -232,7 +224,9 @@ fig2.update_traces(marker=dict(size=3, opacity = 0.6))
 fig2.update_layout(autosize=False,
     width=900,
     height=650)
-st.plotly_chart(fig2)
+
+if not hideScatter:
+    st.plotly_chart(fig2)
 
 
 
