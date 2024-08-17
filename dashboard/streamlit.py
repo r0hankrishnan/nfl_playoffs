@@ -2,6 +2,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import plotly.express as px
+import seaborn as sns
 import os
 
 #Set paths for data
@@ -11,6 +13,8 @@ path2 = "./data/nfl_data.xlsx"
 
 #Title
 st.title('🏈 NFL Playoff Dashboard')
+st.divider()
+st.write("Welcome to my simple NFL playoff predictor dashboard! You can filter the table and vizualization using the fields in the sidebar.")
 
 #Save loaded data
 @st.cache_data
@@ -42,13 +46,11 @@ yearList = np.insert(yearList, 0, "All")
 
 #Sidebar
 with st.sidebar:
-    st.header("🔎 Table Filters:")
+    st.header("🔎 Filters:")
     hideData = st.checkbox("Hide Data Table")
     teamFilter = st.selectbox(label = "Pick a Team", options = teamList)
     yearFilter = st.selectbox(label = "Pick a Year", options = yearList)
     playoffFilter = st.selectbox(label = "Playoffs (Yes/No)", options = ["All", "Yes", "No"])
-    st.divider()
-    st.header("📈 Viz Filters:")
     
 #Function to filter data based on sidebar values
 def filterData():
@@ -100,12 +102,137 @@ def filterData():
     return filteredData
 
 #Load filtered data
-filteredData = filterData()
+filteredTable = filterData()
 
 #--------------#
 
 #Display stats table
-st.subheader(f"Stats ({teamFilter}, {yearFilter})")
+st.subheader(f"🧾 Stats (Team: {teamFilter} | Year: {yearFilter} | Playoff: {playoffFilter})")
 if not hideData:
-    st.write(filteredData)
+    st.write(filteredTable)
+
+#---------------#
+#Massey Ratings
+st.divider()
+st.subheader(f"📊 Massey Ratings (Year: {yearFilter} | Playoff: {playoffFilter})")
+
+@st.cache_data
+def generateGraphData():
+    newData = data.drop(["Team"], axis = 1).groupby(["Playoff", "Year"]).mean(numeric_only=True)
+    return newData
+
+graphData = generateGraphData()
+
+graphData = pd.DataFrame(graphData.to_records()).reset_index()
+masseyMelted = pd.melt(graphData, id_vars= ["Playoff", "Year"], 
+                                 value_vars=["rat", "pwr", "def", "hfa", "sos"])
+masseyMelted["Playoff"] = masseyMelted["Playoff"].astype(str)
+masseyMelted["Playoff"] = pd.Series(np.where(masseyMelted["Playoff"].values == '1', "Yes", "No"),
+          masseyMelted.index)
+
+def filterGraphData():
+    if yearFilter == "All" and playoffFilter == "All":
+        filteredDf = masseyMelted
+        
+    elif yearFilter != "All" and playoffFilter == "All":
+        filteredDf = masseyMelted[(masseyMelted["Year"] == int(yearFilter))]
+        
+    elif yearFilter == "All" and playoffFilter != "All":
+        if playoffFilter == "Yes":
+            filteredDf = masseyMelted[(masseyMelted["Playoff"] == playoffFilter)]
+        else:
+            filteredDf = masseyMelted[(masseyMelted["Playoff"] == playoffFilter)]
+  
+    else:
+        if playoffFilter == "Yes":
+            filteredDf = masseyMelted[(masseyMelted["Year"] == int(yearFilter)) &
+                                      (masseyMelted["Playoff"] == playoffFilter)]
+        else:
+            filteredDf = masseyMelted[(masseyMelted["Year"] == int(yearFilter)) &
+                                      (masseyMelted["Playoff"] == playoffFilter)]
+    
+    return filteredDf
+            
+  
+masseyFiltered = filterGraphData()
+
+fig = px.bar(masseyFiltered, x="value", y="variable", color="Playoff", barmode="group",
+             labels={
+                 "value":"Value",
+                 "variable":"Massey Ratings"
+             }
+             )
+fig.update_layout(legend_traceorder="reversed")
+st.plotly_chart(fig)
+
+#----------#
+st.divider()
+st.subheader(f"📈 ESPN Per-Game Stats (Year: {yearFilter} | Playoff: {playoffFilter})")
+
+scatterData = data.drop(["Team", "rat", "pwr", "def", "hfa", "sos"], axis = 1)
+scatterData["Playoff"] = scatterData["Playoff"].astype(str)
+scatterData["Playoff"] = pd.Series(np.where(scatterData["Playoff"].values == '1', "Yes", "No"),
+          scatterData.index)
+scatterData = scatterData[["Year", "Playoff", "off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g", 
+                "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
+                "def_pts_g"]]
+
+def filterScatterData():
+    if yearFilter == "All" and playoffFilter == "All":
+        filteredDf = scatterData
+        
+    elif yearFilter != "All" and playoffFilter == "All":
+        filteredDf = scatterData[(scatterData["Year"] == int(yearFilter))]
+        
+    elif yearFilter == "All" and playoffFilter != "All":
+        if playoffFilter == "Yes":
+            filteredDf = scatterData[(scatterData["Playoff"] == playoffFilter)]
+        else:
+            filteredDf = scatterData[(scatterData["Playoff"] == playoffFilter)]
+  
+    else:
+        if playoffFilter == "Yes":
+            filteredDf = scatterData[(scatterData["Year"] == int(yearFilter)) &
+                                      (scatterData["Playoff"] == playoffFilter)]
+        else:
+            filteredDf = scatterData[(scatterData["Year"] == int(yearFilter)) &
+                                      (scatterData["Playoff"] == playoffFilter)]
+    
+    return filteredDf
+
+scatterFilter = filterScatterData()
+
+fig2 = px.scatter_matrix(scatterFilter,
+    dimensions=["off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g", 
+                "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
+                "def_pts_g"],
+    color="Playoff",
+    size_max = 1,
+    labels = {
+        "off_total_yds_g":"Offense Tot. Yds.",
+        "off_pass_yds_g":"Offense Pass. Yds.",
+        "off_rush_yds_g":"Offense Rush Yds.",
+        "off_pts_g":"Offense Pts.",
+        "def_total_yds_g":"Defense Tot. Yds.",
+        "def_pass_yds_g":"Defense Pass Yds.",
+        "def_rush_yds_g":"Defense Rush Yds.",
+        "def_pts_g":"Defense Pts."
+    })
+fig2.update_layout(yaxis1 = {"title":{"font":{"size":5}}}, yaxis2 = {"title":{"font":{"size":5}}},
+                   yaxis3 = {"title":{"font":{"size":5}}}, yaxis4 = {"title":{"font":{"size":5}}},
+                   yaxis5 = {"title":{"font":{"size":5}}}, yaxis6 = {"title":{"font":{"size":5}}},
+                   yaxis7 = {"title":{"font":{"size":5}}}, yaxis8 = {"title":{"font":{"size":5}}})
+
+fig2.update_layout(xaxis1 = {"title":{"font":{"size":7}}}, xaxis2 = {"title":{"font":{"size":7}}},
+                   xaxis3 = {"title":{"font":{"size":7}}}, xaxis4 = {"title":{"font":{"size":7}}},
+                   xaxis5 = {"title":{"font":{"size":7}}}, xaxis6 = {"title":{"font":{"size":7}}},
+                   xaxis7 = {"title":{"font":{"size":7}}}, xaxis8 = {"title":{"font":{"size":7}}})
+
+fig2.update_traces(marker=dict(size=3, opacity = 0.6))
+fig2.update_layout(autosize=False,
+    width=900,
+    height=650)
+st.plotly_chart(fig2)
+
+
 
