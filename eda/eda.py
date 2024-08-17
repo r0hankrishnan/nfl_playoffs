@@ -154,3 +154,49 @@ matrixData = df[["Playoff", "off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g
                 "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
                 "def_pts_g"]]
 sns.pairplot(matrixData, diag_kind="kde", hue = "Playoff")
+
+#Compare stats between chosen and previous year
+gameData = df[["Team", "Year", "off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g", 
+                "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
+                "def_pts_g"]]
+teamFilter = "Miami Dolphins"
+yearFilter = "2022"
+yearList = [int(yearFilter), (int(yearFilter)-1)]
+gameFiltered = gameData[(gameData["Team"] == teamFilter)&
+                        (gameData["Year"] == int(yearFilter))]
+
+gameFiltered = gameData[(gameData["Team"] == teamFilter)&
+                        (gameData["Year"].isin(yearList))]
+                        
+
+gameFiltered = gameFiltered.rename(columns = {"off_total_yds_g":"Offensive Total Yds. Per Game",
+                                    "off_pass_yds_g":"Offensive Passing Yds. Per Game", 
+                                    "off_rush_yds_g":"Offensive Rushing Yds. Per Game", 
+                                    "off_pts_g":"Offensive Points Per Game", 
+                                    "def_total_yds_g":"Defensive Total Yds. Per Game", 
+                                    "def_pass_yds_g":"Defensive Passing Yards Per Game", 
+                                    "def_rush_yds_g": "Defensive Rushing Yards Per Game",
+                                    "def_pts_g":"Defensive Points Per Game"
+    
+})
+
+gameMelted = pd.melt(gameFiltered, id_vars = ["Team", "Year"],
+                     value_vars = ["Offensive Total Yds. Per Game",
+          "Offensive Passing Yds. Per Game",
+          "Offensive Rushing Yds. Per Game",
+          "Offensive Points Per Game",
+          "Defensive Total Yds. Per Game",
+          "Defensive Passing Yards Per Game",
+          "Defensive Rushing Yards Per Game",
+          "Defensive Points Per Game"])
+gameMelted["Year"] = gameMelted["Year"].astype(str)
+
+fig = px.bar(gameMelted, x = "value", y = "variable", color="Year", barmode = "group",
+             labels = {
+                 "value":"",
+                 "variable":""
+             },
+             text_auto = True)
+fig.show()
+
+px.line(gameData[(gameData["Team"] == teamFilter)], x = "Year", y = "off_total_yds_g")
