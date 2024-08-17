@@ -148,3 +148,9 @@ fig = px.bar(conditionalMeansMelted, x="value", y="variable", color="Playoff", b
              title="Massey Stats")
 fig.update_layout(legend_traceorder="reversed")
 fig.show()
+
+#Scatter matrix
+matrixData = df[["Playoff", "off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g", 
+                "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
+                "def_pts_g"]]
+sns.pairplot(matrixData, diag_kind="kde", hue = "Playoff")
