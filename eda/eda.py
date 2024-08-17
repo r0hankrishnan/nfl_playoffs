@@ -118,10 +118,33 @@ corr_mat = df.drop("Team", axis  = 1).corr()
 plt.figure(figsize =(25, 20))
 sns.heatmap(corr_mat, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
 
-# Pulled from Marimo -- edit to fit here
-# correlations = df2.corr()
-# correlations = correlations.loc[:, "Playoff"]
-# correlations = correlations.reset_index().rename(columns = {"index":"variable"})
-# correlations = correlations[(correlations["Playoff"] >0.50) | (correlations["Playoff"] < -0.50)]
-# correlations.sort_values(by = "Playoff")
 
+#Playoffs vs not stat comparison
+conditionalMeans = pd.DataFrame(conditionalMeans.to_records()).reset_index()
+conditionalMeansMelted = pd.melt(conditionalMeans, id_vars= ["Playoff"], 
+                                 value_vars=["rat", "pwr", "def", "hfa", "sos"])
+
+plot = sns.catplot(
+    data = conditionalMeansMelted, kind = "bar",
+    x = "value", y = "variable", hue = "Playoff",
+    errorbar = "sd", palette = "dark", alpha = .6, height = 6
+)
+plot.despine(left = True)
+plot.set_xlabels("Value")
+plot.set_ylabels("Massey Stat")
+plot.set_titles("")
+
+#Plotly implementation
+import plotly.express as px
+conditionalMeansMelted["Playoff"] = conditionalMeansMelted["Playoff"].astype(str)
+conditionalMeansMelted["Playoff"] = pd.Series(np.where(conditionalMeansMelted["Playoff"].values == '1', "Yes", "No"),
+          conditionalMeansMelted.index)
+
+fig = px.bar(conditionalMeansMelted, x="value", y="variable", color="Playoff", barmode="group",
+             labels={
+                 "value":"Value",
+                 "variable":"Massey Stats"
+             },
+             title="Massey Stats")
+fig.update_layout(legend_traceorder="reversed")
+fig.show()
