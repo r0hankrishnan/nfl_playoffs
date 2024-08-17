@@ -4,6 +4,9 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 import os
+import sys
+
+#st.set_option('client.showErrorDetails', False)
 
 #Paths 
 path = "./data/modelling.csv"
@@ -37,29 +40,69 @@ with st.sidebar:
     yearFilter = st.selectbox(label = "Pick a year", options = yearChoice)
     
 #Title
-st.title("Explore a specific team's stats!")
+st.title(f"Explore The {teamFilter}'s stats in {yearFilter}!")
 
 #Get win record as a number 
-winRecord = displayData[(displayData["Team"] == teamFilter)&
-                                                (displayData["Year"] == yearFilter)]["record"].values.astype(float).item()
+try:
+    winRecord = displayData[(displayData["Team"] == teamFilter)&(displayData["Year"] == yearFilter)]["record"].values.astype(float).item()
+except:
+    st.error('An unexpected error occurred. Please try again later.')
+
 #Display win record   
-st.subheader(f"{teamFilter} {yearFilter} Win Record: {winRecord * 100} %")
+try:
+    st.subheader(f"{teamFilter} {yearFilter} Win Record: {round(winRecord * 100,2)} %")
+except:
+    st.error(f"Cannot calculate win record for {teamFilter} in {yearFilter}.")
+st.divider()
+if displayData[(displayData["Team"] == teamFilter)&(displayData["Year"]==yearFilter)]["Playoff"].values == 1:
+    st.subheader(f"The {teamFilter} made the playoffs in {yearFilter}.")
+else:
+    st.subheader(f"The {teamFilter} did not make the playoffs in {yearFilter}.")
+st.divider()
   
 #Make 3 columns to display Massey Ratings
 col1,col2, col3 = st.columns(3)
 
-col1.metric(label = "Massey Overall Rating", value = displayData[(displayData["Team"] == teamFilter)&
-                                                (displayData["Year"] == yearFilter)]["rat"].values)
-col1.metric(label = "Massey Power Rating", value = displayData[(displayData["Team"] == teamFilter)&
-                                                (displayData["Year"] == yearFilter)]["pwr"].values)
-col2.metric(label = "Massey Offensive Rating", value = displayData[(displayData["Team"] == teamFilter)&
-                                                (displayData["Year"] == yearFilter)]["off"].values)
-col2.metric(label = "Massey Defensive Rating", value = displayData[(displayData["Team"] == teamFilter)&
-                                                (displayData["Year"] == yearFilter)]["def"].values)
-col3.metric(label = "Massey Home Field Advantage Rating", value = displayData[(displayData["Team"] == teamFilter)&
-                                                (displayData["Year"] == yearFilter)]["hfa"].values)
-col3.metric(label = "Massey Strength of Schedule Rating", value = displayData[(displayData["Team"] == teamFilter)&
-                                                (displayData["Year"] == yearFilter)]["sos"].values)
+def calcDelta(var):
+    delta = ((displayData[(displayData["Team"] == teamFilter)&(displayData["Year"] == yearFilter)][var].values - 
+            displayData[(displayData["Team"] == teamFilter)&(displayData["Year"] == str(int(yearFilter)-1))][var].values)/
+            displayData[(displayData["Team"] == teamFilter)&(displayData["Year"] == str(int(yearFilter)-1))][var].values)
+    
+    return delta.item()
+
+try:
+    deltaOverall = calcDelta("rat")
+    col1.metric(label = "Massey Overall Rating", value = displayData[(displayData["Team"] == teamFilter)&
+                                                (displayData["Year"] == yearFilter)]["rat"].values,
+            delta=f"{round(deltaOverall*100,2)}%")
+
+    deltaPower = calcDelta("pwr")
+    col1.metric(label = "Massey Power Rating", value = displayData[(displayData["Team"] == teamFilter)&
+                                                (displayData["Year"] == yearFilter)]["pwr"].values,
+            delta=f"{round(deltaPower*100,2)}%")
+
+    deltaOff = calcDelta("off")
+    col2.metric(label = "Massey Offensive Rating", value = displayData[(displayData["Team"] == teamFilter)&
+                                                (displayData["Year"] == yearFilter)]["off"].values,
+            delta=f"{round(deltaOff*100,2)}%")
+
+    deltaDef = calcDelta("def")
+    col2.metric(label = "Massey Defensive Rating", value = displayData[(displayData["Team"] == teamFilter)&
+                                                (displayData["Year"] == yearFilter)]["def"].values,
+            delta=f"{round(deltaDef*100,2)}%")
+
+    deltaHfa = calcDelta("hfa")
+    col3.metric(label = "Massey Home Field Advantage Rating", value = displayData[(displayData["Team"] == teamFilter)&
+                                                (displayData["Year"] == yearFilter)]["hfa"].values,
+            delta=f"{round(deltaHfa*100,2)}%")
+
+    deltaSos = calcDelta("sos")
+    col3.metric(label = "Massey Strength of Schedule Rating", value = displayData[(displayData["Team"] == teamFilter)&
+                                                (displayData["Year"] == yearFilter)]["sos"].values,
+            delta=f"{round(deltaSos*100,2)}%")
+    
+except:
+    st.error(f"Cannot calculate deltas for {teamFilter} in {yearFilter}.")
 
 #Bar plot of per game stats
 gameData = displayData[["Team", "Year", "off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g", 
@@ -93,6 +136,8 @@ gameMelted = pd.melt(gameFiltered, id_vars = ["Team", "Year"],
           "Defensive Rushing Yards Per Game",
           "Defensive Points Per Game"])
 
+st.divider()
+st.subheader(f"Massey Ratings for The {teamFilter} in {yearFilter}")
 fig = px.bar(gameMelted, x = "value", y = "variable", color="Year", barmode = "group",
              labels = {
                  "value":"",
@@ -146,5 +191,7 @@ with st.sidebar:
     st.header("Look at any metric from 2014-2022.")
     varFilter = st.selectbox(label = "Pick a stat", options = varChoices)
 
+st.divider()
+st.subheader(f"{teamFilter}: {varFilter} Over Time")
 fig2 = px.line(statFiltered[(gameData["Team"] == teamFilter)], x = "Year", y = varFilter)
 st.plotly_chart(fig2)
