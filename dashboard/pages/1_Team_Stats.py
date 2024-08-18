@@ -8,6 +8,11 @@ import sys
 
 #st.set_option('client.showErrorDetails', False)
 
+st.set_page_config(
+        page_title='Individual Stats',
+        page_icon="📈"                  
+        )
+
 #Paths 
 path = "./data/modelling.csv"
 path2 = "./data/nfl_data.xlsx"

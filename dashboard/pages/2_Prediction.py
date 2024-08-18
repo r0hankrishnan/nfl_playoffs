@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 from sklearn import tree
 
+st.set_page_config(
+        page_title='Predictions',
+        page_icon="🔍"                  
+        )
+
 #Path
 path = "./data/modelling.csv"
 

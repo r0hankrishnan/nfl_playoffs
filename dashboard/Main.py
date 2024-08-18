@@ -11,6 +11,10 @@ path2 = "./data/nfl_data.xlsx"
 
 #--------------#
 
+st.set_page_config(
+        page_title='Main Page',
+        page_icon="🏈"                  
+        )
 #Title
 st.title('🏈 NFL Playoff Dashboard')
 st.divider()
