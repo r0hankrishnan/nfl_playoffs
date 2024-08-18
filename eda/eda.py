@@ -143,9 +143,9 @@ conditionalMeansMelted["Playoff"] = pd.Series(np.where(conditionalMeansMelted["P
 fig = px.bar(conditionalMeansMelted, x="value", y="variable", color="Playoff", barmode="group",
              labels={
                  "value":"Value",
-                 "variable":"Massey Stats"
+                 "variable":"Massey Rating"
              },
-             title="Massey Stats")
+             title="Average Massey Ratings Between Playoff and Non-Playoff Teams")
 fig.update_layout(legend_traceorder="reversed")
 fig.show()
 
