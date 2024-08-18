@@ -1,7 +1,5 @@
 # NFL Playoff Prediction Project (In Progress)
-**If you are visiting from my CV, please go to the `class-work` folder to see my code and writing submissions**
-
-*Apologies for the incomplete README, I am in the process of updating and expanding upon my submitted work for this project!*
+**If you are visiting from my CV, you can go to the `class-work` folder to see my original code and writing submissions**
 
 Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python. This project was originally done in Spyder but is being recreated and expanded upon using VSCode for learning purposes.
 
@@ -29,12 +27,13 @@ I repeated this process separately for the 2023 data, which is what I ultimately
  
 ## Exploratory Analysis
 
+
 ## Modeling
 |Model|Accuracy|
 |-----|--------|
-|Logistic Regression|60%|
-|Decision Tree|65%|
-|Decision Tree (ccp optimized)|84%|
+|Logistic Regression|59%|
+|Decision Tree|84%|
+|Decision Tree (ccp optimized)|84.38%|
 |Random Forest|70%|
 |Random Forest (random CV grid search optimized)|78%|
 
