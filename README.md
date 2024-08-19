@@ -5,7 +5,8 @@ Using self-gathered data, I will explore various methods of predicting what NFL 
 
 ## Table of Contents
 1. [Introduction](#Introduction)
-2. [Data](#Data)
+   - [Background](#Background)
+3. [Data](#Data)
 3. [Exploratory Analysis](#Exploratory-Analysis)
 4. [Modeling](#Modeling)
 5. [Dashboarding](#Dashboarding)
@@ -40,5 +41,9 @@ I repeated this process separately for the 2023 data, which is what I ultimately
 I elected to not try KNN due to the high dimensionality of the data, which had 33 features after cleaning. The logistic regression ok; however, many of the variables were not normally distributed, meaning the model's inferential power is severely diminished. This data, being high dimensional and varied, was a great fit for a tree-based model. The pruned classification tree was able to pick out the most important features including the Massey record statistic, the Massey power statistic, and total defensive yards per game, which all had some of the strongest correlations with making the playoffs. The random forest performed worse than the individual pruned decision tree. This seems to be because of training set overfitting. The data itself is relatively stable, meaning that our decision tree should suffer too much with variance issues. Rather than continue to hyper-optimize the random forest to surpass 84% accuracy, I decided to simply use the decision tree because it is highly explainable and does a very good job at prediction with little training time. 
 
 ## Dashboarding
+A key goal of this project was to learn the python web-app framework, streamlit, and implement a dashboard using my nfl data and models. Using the [streamlit documentation](https://docs.streamlit.io/), I created a web app to summarize the nfl data I collected and to use the decision tree model to predict whether a team will make the playoffs. You can view the full dashboard [here](https://r0hankrishnan-nfl.streamlit.app) or by clicking on the link in the details of this repository.
 
+![dashboard 1](./assets/dashboard-1.png)
+![dashboard 2](./assets/dashboard-2.png)
+![dashbaord 3](./assets/dashboard-3.png)
 
