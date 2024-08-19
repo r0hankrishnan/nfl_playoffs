@@ -42,7 +42,7 @@ I elected to not try KNN due to the high dimensionality of the data, which had 3
 ## Dashboarding
 A key goal of this project was to learn the python web-app framework, streamlit, and implement a dashboard using my nfl data and models. Using the [streamlit documentation](https://docs.streamlit.io/), I created a web app to summarize the nfl data I collected and to use the decision tree model to predict whether a team will make the playoffs. You can view the full dashboard [here](https://r0hankrishnan-nfl.streamlit.app) or by clicking on the link in the details of this repository.
 
-[dashboard 1](./assets/dashboard-1.png)
-[dashboard 2](./assets/dashboard-2.png)
-[dashbaord 3](./assets/dashboard-3.png)
+![dashboard 1](./assets/dashboard-1.png)
+![dashboard 2](./assets/dashboard-2.png)
+![dashbaord 3](./assets/dashboard-3.png)
 
