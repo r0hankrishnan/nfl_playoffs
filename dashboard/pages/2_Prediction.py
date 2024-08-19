@@ -155,6 +155,6 @@ if submitted:
         with st.container(border = True):
             st.subheader(f"{Team} {Year} Predicted Playoff Result:")
             st.title(":red[No]")
-            predictedProb = round((treeFinal.predict_proba(data.drop("Team", axis = 1))[0,1])*100, 2)
+            predictedProb = round((treeFinal.predict_proba(data.drop("Team", axis = 1))[0,0])*100, 2)
             st.write(f":red[Predicted probability: {predictedProb}%.]")
                              
