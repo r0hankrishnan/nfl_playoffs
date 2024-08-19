@@ -197,11 +197,13 @@ def filterScatterData():
 scatterFilter = filterScatterData()
 
 #Generate scatter plot, adjust labels & sizes, display
+color_discrete_map = {'Yes': 'white', 'No': '#0068c5'}
 fig2 = px.scatter_matrix(scatterFilter,
     dimensions=["off_total_yds_g", "off_pass_yds_g", "off_rush_yds_g", 
                 "off_pts_g", "def_total_yds_g", "def_pass_yds_g", "def_rush_yds_g",
                 "def_pts_g"],
     color="Playoff",
+    color_discrete_map=color_discrete_map,
     size_max = 1,
     labels = {
         "off_total_yds_g":"Offense Tot. Yds.",
