@@ -87,7 +87,7 @@ with st.expander("Click here to manually input a team stats."):
         puntAvg = col3.number_input(label = "Yds. Per Punt Return", value = 9.5)
         puntLng = col4.number_input(label = "Long Punt Return", value = 18)
         puntTd = col3.number_input(label = "Punt Return Touchdown", value = 0)
-        puntFc = col4.number_input(label = "Punt Return Fair Catches", vaue = 9)
+        puntFc = col4.number_input(label = "Punt Return Fair Catches", value = 9)
         turnDiff = col3.number_input(label = "Turnover Ratio", value = -3)
         takeInt = col4.number_input(label = "Takeaway Interceptions", value = 2)
         takeFum = col3.number_input(label = "Fumbles Recovered", value = 3)
@@ -142,11 +142,14 @@ with st.expander("Click here to manually input a team stats."):
                 "Massey Schedule":[sos]
             }
             data = pd.DataFrame(dataList)
-            
-            if treeFinal.predict(data.drop("Team", axis = 1)).item() == 1:
-                st.subheader(f"{Team} {Year} Predicted Playoff Result:")
-                st.title(":blue[Yes]")
-            else:
-                st.subheader(f"{Team} {Year} Predicted Playoff Result:")
-                st.title(":red[No]")
+
+if submitted:        
+    if treeFinal.predict(data.drop("Team", axis = 1)).item() == 1:
+        with st.container(border = True):
+            st.subheader(f"{Team} {Year} Predicted Playoff Result:")
+            st.title(":blue[Yes]")
+    else:
+        with st.container(border = True):
+            st.subheader(f"{Team} {Year} Predicted Playoff Result:")
+            st.title(":red[No]")
                              
