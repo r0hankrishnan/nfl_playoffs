@@ -32,11 +32,14 @@ The first step of my exploratory analysis was to plot the distribution of all th
 I also compared the average value of each explanatory variables across all years between teams that made the playoffs versus those who did not. To properly compare the differences, I standardized the data, grouped by "Playoff", and then calculated the differences between groups. Understandably, the same variables as above had the largest absolute differences. Below is the unstandardized differences for the Massey ratings visualized.
 ![catplot](./assets/masseyComparePlay.png)
 
+
 To examine relationships between explanatory variables, I created a pairplot for all of the per-game variables. There does appear to be somme collinearity; but since decision trees implicitly perform variable selection, I left the data as-is.
 ![pairplot](./assets/scatterMatrixPerGame.png)
 
+
 Finally, I created a plot to visualize a specific team's performance for a chosen year versus the previous year. This code would later be used in my streamlit dashboard. 
 ![barplot](./assets/statsYearCompare.png)
+
 
 ## Modeling
 |Model|Accuracy|
