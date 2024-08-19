@@ -5,7 +5,8 @@ Using self-gathered data, I will explore various methods of predicting what NFL 
 
 ## Table of Contents
 1. [Introduction](#Introduction)
-2. [Data](#Data)
+   - [Background](#Background)
+3. [Data](#Data)
 3. [Exploratory Analysis](#Exploratory-Analysis)
 4. [Modeling](#Modeling)
 5. [Dashboarding](#Dashboarding)
