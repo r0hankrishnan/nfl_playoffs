@@ -34,10 +34,44 @@ def load_data():
     df = df.loc[:, cols]
     return df
 
-#Load data, copy df, convert Year to str
+#Load data, copy df, convert Year to str, rename columns
 data = load_data()
 displayData = data.copy()
 displayData["Year"] = displayData["Year"].astype(str)
+displayData = displayData.rename(columns = {"off_total_yds_g":"Offensive Total Yds. Per Game",
+                                    "off_pass_yds_g":"Offensive Passing Yds. Per Game", 
+                                    "off_rush_yds_g":"Offensive Rushing Yds. Per Game", 
+                                    "off_pts_g":"Offensive Points Per Game", 
+                                    "def_total_yds_g":"Defensive Total Yds. Per Game", 
+                                    "def_pass_yds_g":"Defensive Passing Yards Per Game", 
+                                    "def_rush_yds_g": "Defensive Rushing Yards Per Game",
+                                    "def_pts_g":"Defensive Points Per Game",
+                                    "kick_att":"Kick Returns",
+                                    "kick_yds":"Kick Return Yds.",
+                                    "kick_avg":"Yds. Per Kick Return",
+                                    "kick_lng":"Long Kick Returns",
+                                    "kick_td":"Kick Return Touchdowns",
+                                    "punt_att":"Punt Returns",
+                                    "punt_yds":"Punt Return Yds.",
+                                    "punt_avg":"Yds. Per Punt Return",
+                                    "punt_lng":"Long Punt Return",
+                                    "punt_td":"Punt Return Touchdown",
+                                    "punt_fc":"Punt Return Fair Catches",
+                                    "turn_diff":"Turnover Ratio",
+                                    "take_int":"Takeaway Interceptions",
+                                    "take_fum":"Fumbles Recovered",
+                                    "take_total":"Total Takeaways",
+                                    "give_int":"Giveaway Interceptions",
+                                    "give_fum":"Fumbles Lost",
+                                    "give_total":"Total Giveaways",
+                                    "record": "Record",
+                                    "rat":"Massey Overall",
+                                    "pwr":"Massey Power",
+                                    "off":"Massey Offense",
+                                    "def":"Massey Defense",
+                                    "hfa":"Massey Homefield",
+                                    "sos":"Massey Schedule"
+})
 
 #Create selection options for table filters
 teamList = displayData["Team"].unique()
