@@ -1,8 +1,7 @@
 # NFL Playoff Prediction Project (In Progress)
 **If you are visiting from my CV, you can go to the `class-work` folder to see my original code and writing submissions**
 
-Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python. This project was originally done in Spyder but is being recreated and expanded upon using VSCode for learning purposes.
-
+Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python.
 ## Table of Contents
 1. [Introduction](#Introduction)
    - [Background](#Background)
