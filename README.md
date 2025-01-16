@@ -33,7 +33,7 @@ I also compared the average value of each explanatory variables across all years
 ![catplot](./assets/masseyComparePlay.png)
 
 
-To examine relationships between explanatory variables, I created a pairplot for all of the per-game variables. There does appear to be somme collinearity; but since decision trees implicitly perform variable selection, I left the data as-is.
+To examine relationships between explanatory variables, I created a pairplot for all of the per-game variables. There does appear to be some collinearity; but since decision trees implicitly perform variable selection, I left the data as-is.
 
 ![pairplot](./assets/scatterMatrixPerGame.png)
 
