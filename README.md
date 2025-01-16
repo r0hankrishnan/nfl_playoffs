@@ -1,4 +1,4 @@
-# NFL Playoff Prediction Project (In Progress)
+# NFL Playoff Prediction Project
 
 Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python.
 
