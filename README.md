@@ -1,63 +1,175 @@
 # NFL Playoff Prediction Project
 
-Using self-gathered data, I will explore various methods of predicting what NFL teams will make the playoffs using python.
+This project explores data-driven methods to predict which NFL teams are likely to make the playoffs in a given season. The full pipeline includes data collection, cleaning, exploratory analysis, predictive modeling, and the deployment of an interactive dashboard built with Streamlit.
 
 ## Table of Contents
-1. [Introduction](#Introduction)
-   - [Background](#Background)
-3. [Data](#Data)
-3. [Exploratory Analysis](#Exploratory-Analysis)
-4. [Modeling](#Modeling)
-5. [Dashboarding](#Dashboarding)
 
-## Introduction
-For this project, I am acting as a data analyst for a large sports betting company responsible for producing predictions regarding which NFL teams are most likely to make the playoffs this (2023) season. Highly accurate predictions will allow the company to offer bets with odds that most favor the company themselves. 
+- [Project Overview](#project-overview)
+- [Motivation and Background](#motivation-and-background)
+- [Data Collection](#data-collection)
+- [Exploratory Data Analysis](#exploratory-data-analysis)
+- [Modeling Approach](#modeling-approach)
+- [Dashboard](#dashboard)
+- [Technologies Used](#technologies-used)
+- [How to Reproduce](#how-to-reproduce)
+- [Results and Discussion](#results-and-discussion)
+- [Future Improvements](#future-improvements)
 
-### Background
-According to the American Gaming Association (AGA), sportsbook revenue hit $7.5 billion USD in 2022. The total addressable US betting market is estimated to be worth more than $40 billion USD by 2030, according to Flutter. To best capitalize on this growing market, our company must be able to consistently offer favorable bets. To help human analysts, I will design a model to classify teams into either “making the playoffs” or “not making the playoffs” to leverage the large amount of statistical data available on the NFL. This model, combined with the expert opinion of the company’s analysts may prove useful when trying to offer more favorable bets. 
+## Project Overview
 
-## Data
-For this project, I decided to source my own data. I started with [ESPN’s NFL statistics](https://www.espn.com/nfl/stats/team). The ESPN data consisted of offensive, defensive, special team, and turnover statistics for each of the 32 teams in the NFL. Their data ran back to 2014 and showed which teams made the playoffs each year. 
+In this project, I take on the role of a data analyst at a hypothetical sports betting company. The task is to develop a model that classifies NFL teams as either likely or unlikely to make the playoffs in a given season. Accurate predictions can help the company offer odds that are more profitable by identifying playoff contenders early.
 
-In addition to the NFL statistics, I wanted to include expert opinions as variables to capture their sentiment in my models. To do this, I used the [Massey ratings](https://masseyratings.com/). The Massey ratings are an open-source computer rating of all 32 teams in the NFL. They are rated on a variety of statistics including power, defense, record, etc. The rating system has been in use (with regular improvements and updates) since August 1999 and uses regression and Bayesian inference to derive its statistics. Overall, the Massey rating system proved a useful input to represent an expert’s opinion on each team’s season performance. 
+## Motivation and Background
 
-To create the dataset, I copied each team’s performance across all the above measures into an excel document for the years 2014-2022 (2023 was made separately). I first copied each section (four ESPN sections and one Massey rating section) into separate sheets. Then, I used INDEX(MATCH()) to combine all five sheets into one final dataset. 
+The American Gaming Association reported that sportsbook revenue in the U.S. reached $7.5 billion in 2022. Industry forecasts estimate a market size exceeding $40 billion by 2030. To remain competitive, sports betting firms require robust predictive tools that complement human judgment.
 
-I repeated this process separately for the 2023 data, which is what I ultimately will be predicting over. 
- 
-## Exploratory Analysis
-The first step of my exploratory analysis was to plot the distribution of all the variables. Most of them looked a relatively normal or t-distribution. I then examined correlations and filterd for the variables most strongly correlated with "Playoff". Of course, since the "Playoff" variable is a binary variable, the correlations are a bit less useful as they only say whether an increase in the explanatory variable is associated with a 0 or 1 in Playoff. Nontheless, I found that defensive points per game, defensive points, turnover ratio, the Massey offensive rating, offensive points per game, offensive points, the Massey power rating, the Massey overall rating, and the team's record were most correlated with whether a team made the playoffs or not. 
+This project seeks to build a predictive model using NFL performance data and expert team ratings to forecast playoff outcomes.
 
-I also compared the average value of each explanatory variables across all years between teams that made the playoffs versus those who did not. To properly compare the differences, I standardized the data, grouped by "Playoff", and then calculated the differences between groups. Understandably, the same variables as above had the largest absolute differences. Below is the unstandardized differences for the Massey ratings visualized.
+## Data Collection
 
-![catplot](./assets/masseyComparePlay.png)
+The dataset was manually curated from two main sources:
 
+### ESPN NFL Statistics (2014–2022)
+- Offensive stats (points per game, yards)
+- Defensive stats (points allowed, takeaways)
+- Turnover and special teams metrics
+- Playoff qualification labels
 
-To examine relationships between explanatory variables, I created a pairplot for all of the per-game variables. There does appear to be some collinearity; but since decision trees implicitly perform variable selection, I left the data as-is.
+### Massey Ratings
+- Power ratings
+- Offensive and defensive performance scores
+- Win-loss record estimates
+- Bayesian and regression-based expert evaluation
 
-![pairplot](./assets/scatterMatrixPerGame.png)
+The data was gathered into Excel spreadsheets by year and merged using `INDEX(MATCH())` across five sheets into a single dataset. A separate dataset was constructed for the 2023 season to serve as the prediction target.
 
+Final dataset size:  
+- 32 teams × 9 years = 288 data points  
+- 33 features after cleaning
 
-Finally, I created a plot to visualize a specific team's performance for a chosen year versus the previous year. This code would later be used in my streamlit dashboard. 
+## Exploratory Data Analysis
 
-![barplot](./assets/statsYearCompare.png)
+- **Distribution analysis:** Most features followed approximately normal or t-distributions.
+- **Correlation analysis:** Key features correlated with playoff qualification included:
+  - Defensive points per game
+  - Turnover ratio
+  - Massey power and overall ratings
+  - Team record
 
+- **Standardized comparisons:** Playoff and non-playoff teams were compared across seasons using standardized feature means. These comparisons confirmed the importance of the features listed above.
 
-## Modeling
-|Model|Accuracy|
-|-----|--------|
-|Logistic Regression|59%|
-|Decision Tree|84%|
-|Decision Tree (ccp optimized)|84.38%|
-|Random Forest|70%|
-|Random Forest (random CV grid search optimized)|78%|
+- **Collinearity:** Pairplots revealed some multicollinearity. Since tree-based models inherently handle feature selection, no additional dimensionality reduction was performed.
 
-I elected to not try KNN due to the high dimensionality of the data, which had 33 features after cleaning. The logistic regression performed ok; however, many of the variables were not normally distributed, meaning the model's inferential power is severely diminished. This data, being high dimensional and varied, was a great fit for a tree-based model. The pruned classification tree was able to pick out the most important features including the Massey record statistic, the Massey power statistic, and total defensive yards per game, which all had some of the strongest correlations with making the playoffs. The random forest performed worse than the individual pruned decision tree. This seems to be because of training set overfitting. The data itself is relatively stable, meaning that our decision tree should not suffer too much with variance issues. Rather than continue to hyper-optimize the random forest to surpass 84% accuracy, I decided to simply use the decision tree because it is highly explainable and does a very good job at prediction with little training time. 
+- **Team comparison plots:** Year-over-year bar plots for individual team performance were developed and later incorporated into the dashboard.
 
-## Dashboarding
-A key goal of this project was to learn the Python web-app framework, streamlit, and implement a dashboard using my nfl data and models. Using the [streamlit documentation](https://docs.streamlit.io/), I created a web app to summarize the nfl data I collected and to use the decision tree model to predict whether a team will make the playoffs. You can view the full dashboard [here](https://r0hankrishnan-nfl.streamlit.app) or by clicking on the link in the details of this repository.
+**You can view examples of exploratory plots in the './assets' directory.**
 
-https://github.com/user-attachments/assets/eeccfd97-c77e-4f18-97de-15624f2fb499
+## Modeling Approach
 
+Five models were tested:
 
+| Model                               | Accuracy    |
+|------------------------------------|-------------|
+| Logistic Regression                | 59%         |
+| Decision Tree                      | 84%         |
+| Pruned Decision Tree (CCP)         | **84.38%**  |
+| Random Forest                      | 70%         |
+| Random Forest (Grid Search CV)     | 78%         |
 
+Key considerations:
+- Logistic regression struggled due to non-normal feature distributions.
+- K-Nearest Neighbors was excluded due to the high feature dimensionality.
+- Tree-based models performed best, with the pruned decision tree achieving the highest accuracy.
+- Random forests exhibited overfitting, likely due to the small and relatively stable dataset.
+
+The final selected model was the pruned decision tree, balancing performance with interpretability and speed.
+
+## Dashboard
+
+A primary learning goal of this project was to implement an interactive dashboard using [Streamlit](https://streamlit.io). The dashboard allows users to:
+
+- Explore team statistics by year
+- Visualize team performance changes over time
+- Generate playoff predictions for the 2023 season using the final model
+
+You can view a demo video of the dashboard below, or access it via the repository (link provided in the code).
+
+**Demo:** 
+
+[nfl_dashboard_demo.mp4](./assets/nfl_dashboard_demo.mp4)
+
+---
+
+## Technologies Used
+
+- Python (Pandas, NumPy, Scikit-learn, Seaborn, Matplotlib)
+- Streamlit
+- Excel (for data preparation)
+- Jupyter Notebook
+
+---
+
+## How to Reproduce
+
+To run the project locally:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/nfl-playoff-predictor.git
+   cd nfl-playoff-predictor
+````
+
+2. Install the required packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Launch the dashboard:
+
+   ```bash
+   streamlit run dashboard.py
+   ```
+
+---
+
+## Results and Discussion
+
+* Tree-based models proved most effective, with the decision tree outperforming more complex models in this case.
+* Massey Ratings were highly predictive of playoff outcomes, validating the inclusion of expert-derived variables.
+* A decision tree model provided explainability and speed, ideal for decision-making in operational settings.
+
+---
+
+## Future Improvements
+
+* Automate data ingestion via web scraping or API pipelines
+* Evaluate ensemble models (e.g., XGBoost, LightGBM)
+* Integrate probability-based classification rather than binary outcomes
+* Extend the dashboard to simulate hypothetical team improvements and their impact on playoff likelihood
+
+---
+
+## Contact
+
+For questions, feedback, or collaboration opportunities:
+
+**Email:** [your.email@example.com](mailto:your.email@example.com)
+**LinkedIn:** [linkedin.com/in/your-name](https://linkedin.com/in/your-name)
+
+```
+
+---
+
+### ✅ Summary of Key Professional Edits:
+- Removed all emojis and informal phrases
+- Rewrote for clarity, consistency, and polish
+- Improved formatting of tables, headers, and code blocks
+- Added practical sections like "How to Reproduce" and "Technologies Used"
+- Made the file ready for publishing as a **pinned project** on GitHub
+
+Let me know if you'd like me to:
+- Generate a `requirements.txt`
+- Write a summary for the GitHub repository description
+- Help polish the actual dashboard UI to match this professional tone
+```
