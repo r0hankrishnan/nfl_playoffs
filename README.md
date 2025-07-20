@@ -92,7 +92,7 @@ A primary learning goal of this project was to implement an interactive dashboar
 - Visualize team performance changes over time
 - Generate playoff predictions for the 2023 season using the final model
 
-You can tour a demo of the app by clicking the link in the repository description and booting up the streamlit instance as prompted. You can also clone this repository and run the dashboard locally.
+You can tour a demo of the app by clicking the link in the repository description (or [right here](https://r0hankrishnan-nfl.streamlit.app/)) and booting up the streamlit instance as prompted. You can also clone this repository and run the dashboard locally.
 
 ## Technologies Used
 
