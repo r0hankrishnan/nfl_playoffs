@@ -92,13 +92,7 @@ A primary learning goal of this project was to implement an interactive dashboar
 - Visualize team performance changes over time
 - Generate playoff predictions for the 2023 season using the final model
 
-You can view a demo video of the dashboard below, or access it via the repository (link provided in the code).
-
-**Demo:** 
-
-[nfl_dashboard_demo.mp4](./assets/nfl_dashboard_demo.mp4)
-
----
+You can tour a demo of the app by clicking the link in the repository description and booting up the streamlit instance as prompted. You can also clone this repository and run the dashboard locally.
 
 ## Technologies Used
 
@@ -106,8 +100,6 @@ You can view a demo video of the dashboard below, or access it via the repositor
 - Streamlit
 - Excel (for data preparation)
 - Jupyter Notebook
-
----
 
 ## How to Reproduce
 
@@ -117,7 +109,7 @@ To run the project locally:
    ```bash
    git clone https://github.com/your-username/nfl-playoff-predictor.git
    cd nfl-playoff-predictor
-````
+   ```
 
 2. Install the required packages:
 
@@ -131,15 +123,11 @@ To run the project locally:
    streamlit run dashboard.py
    ```
 
----
-
 ## Results and Discussion
 
 * Tree-based models proved most effective, with the decision tree outperforming more complex models in this case.
 * Massey Ratings were highly predictive of playoff outcomes, validating the inclusion of expert-derived variables.
 * A decision tree model provided explainability and speed, ideal for decision-making in operational settings.
-
----
 
 ## Future Improvements
 
@@ -147,29 +135,3 @@ To run the project locally:
 * Evaluate ensemble models (e.g., XGBoost, LightGBM)
 * Integrate probability-based classification rather than binary outcomes
 * Extend the dashboard to simulate hypothetical team improvements and their impact on playoff likelihood
-
----
-
-## Contact
-
-For questions, feedback, or collaboration opportunities:
-
-**Email:** [your.email@example.com](mailto:your.email@example.com)
-**LinkedIn:** [linkedin.com/in/your-name](https://linkedin.com/in/your-name)
-
-```
-
----
-
-### ✅ Summary of Key Professional Edits:
-- Removed all emojis and informal phrases
-- Rewrote for clarity, consistency, and polish
-- Improved formatting of tables, headers, and code blocks
-- Added practical sections like "How to Reproduce" and "Technologies Used"
-- Made the file ready for publishing as a **pinned project** on GitHub
-
-Let me know if you'd like me to:
-- Generate a `requirements.txt`
-- Write a summary for the GitHub repository description
-- Help polish the actual dashboard UI to match this professional tone
-```
